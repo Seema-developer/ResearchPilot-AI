@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ResearchPilot AI - Autonomous Research Companion</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-logo">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2L2 22H22L12 2Z" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="12" cy="14" r="3" stroke="var(--purple)" stroke-width="2"/>
+          </svg>
+        </div>
+        <h1>ResearchPilot AI</h1>
+      </div>
+      
+      <button class="new-btn" id="newSessionBtn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        New Research Session
+      </button>
+      
+      <div class="sessions-list-container">
+        <h3>Recent Queries</h3>
+        <ul class="sessions-list" id="sessionsList">
+          <!-- Populated by JS -->
+          <li class="empty-state">No recent sessions</li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-footer">
+        <div class="stats-card">
+          <div class="stat-item">
+            <span class="stat-val" id="statPapers">0</span>
+            <span class="stat-lbl">Papers Synthesized</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-val" id="statGaps">0</span>
+            <span class="stat-lbl">Gaps Found</span>
+          </div>
+        </div>
+        <div class="status-badge-container">
+          <span class="pulse-indicator"></span>
+          <span class="status-text">Multi-Agent System Online</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Workspace -->
+    <main class="workspace">
+      <!-- Input View -->
+      <section class="view-panel" id="inputView">
+        <div class="hero">
+          <h2>Autonomous Research Companion</h2>
+          <p>Scaffold literature reviews, extract research gaps, and formulate experimental methodologies through coordinate multi-agent search.</p>
+        </div>
+        
+        <div class="search-box-container">
+          <div class="search-input-wrapper">
+            <input type="text" id="queryInput" placeholder="Enter your research topic (e.g., Explainable AI for Urdu LLMs)..." autocomplete="off">
+            <button class="submit-btn" id="startResearchBtn">
+              Run Pipeline
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </button>
+          </div>
+          
+          <div class="suggestions">
+            <span>Suggestions:</span>
+            <button class="tag-btn">Explainable AI for Urdu LLMs</button>
+            <button class="tag-btn">SHAP stability in translation</button>
+            <button class="tag-btn">Morphological tokenizers in low-resource NLP</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Active Pipeline Workspace -->
+      <section class="view-panel hidden" id="pipelineView">
+        <header class="workspace-header">
+          <div class="query-display">
+            <span class="badge">Researching</span>
+            <h2 id="activeQueryTitle">...</h2>
+          </div>
+        </header>
+
+        <!-- Visual Stepper -->
+        <div class="stepper">
+          <div class="step" id="step-searching">
+            <div class="step-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            </div>
+            <div class="step-info">
+              <h4>Search</h4>
+              <p>MCP Query</p>
+            </div>
+          </div>
+          <div class="step-line"></div>
+          <div class="step" id="step-summarizing">
+            <div class="step-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+            </div>
+            <div class="step-info">
+              <h4>Summarize</h4>
+              <p>Literature Synthesis</p>
+            </div>
+          </div>
+          <div class="step-line"></div>
+          <div class="step" id="step-finding_gaps">
+            <div class="step-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+            </div>
+            <div class="step-info">
+              <h4>Gaps</h4>
+              <p>Detect Limitations</p>
+            </div>
+          </div>
+          <div class="step-line"></div>
+          <div class="step" id="step-planning_experiments">
+            <div class="step-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
+            </div>
+            <div class="step-info">
+              <h4>Plan</h4>
+              <p>Methodology</p>
+            </div>
+          </div>
+          <div class="step-line"></div>
+          <div class="step" id="step-citations">
+            <div class="step-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+            </div>
+            <div class="step-info">
+              <h4>Citations</h4>
+              <p>BibTeX Build</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="workspace-grid">
+          <!-- Left Console & Results -->
+          <div class="workspace-left">
+            <!-- Console -->
+            <div class="console-box">
+              <div class="console-header">
+                <span class="console-dot red"></span>
+                <span class="console-dot yellow"></span>
+                <span class="console-dot green"></span>
+                <span class="console-title">Multi-Agent Console Stream</span>
+              </div>
+              <div class="console-output" id="consoleLogs">
+                <!-- Populated by JS -->
+                <div class="console-row system">Initializing pipeline listener...</div>
+              </div>
+            </div>
+
+            <!-- Report Results tabs -->
+            <div class="results-box card">
+              <div class="tabs-header">
+                <button class="tab-btn active" data-tab="tab-summaries">Summaries</button>
+                <button class="tab-btn" data-tab="tab-gaps">Research Gaps</button>
+                <button class="tab-btn" data-tab="tab-future">Future Work</button>
+                <button class="tab-btn" data-tab="tab-citations">Citations</button>
+              </div>
+              <div class="tab-content active" id="tab-summaries">
+                <div class="markdown-body" id="reportSummaries">
+                  <p class="placeholder-text">Synthesizing literature summaries, please wait...</p>
+                </div>
+              </div>
+              <div class="tab-content" id="tab-gaps">
+                <div class="markdown-body" id="reportGaps">
+                  <p class="placeholder-text">Analyzing gaps, please wait...</p>
+                </div>
+              </div>
+              <div class="tab-content" id="tab-future">
+                <div class="markdown-body" id="reportFuture">
+                  <p class="placeholder-text">Formulating future directives, please wait...</p>
+                </div>
+              </div>
+              <div class="tab-content" id="tab-citations">
+                <pre class="bibtex-output" id="reportCitations">Waiting for citations builder...</pre>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Triage (HITL) -->
+          <div class="workspace-right">
+            <div class="triage-box card" id="triageBox">
+              <div class="triage-header">
+                <div class="triage-title-wrapper">
+                  <h3>Human-In-The-Loop Triage</h3>
+                  <span class="triage-status" id="triageStatusBadge">Waiting</span>
+                </div>
+                <p>Verify, modify, and approve the methodology designed by the Experiment Agent before finalization.</p>
+              </div>
+              
+              <div class="triage-content">
+                <textarea id="methodologyEditor" placeholder="Methodology suggestions will load here..."></textarea>
+              </div>
+
+              <div class="triage-footer" id="triageActions">
+                <button class="btn secondary" id="requestRevisionBtn" disabled>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                  Request Revision
+                </button>
+                <button class="btn primary" id="approveMethodologyBtn" disabled>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  Approve & Finalize
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script src="index.js"></script>
+</body>
+</html>
